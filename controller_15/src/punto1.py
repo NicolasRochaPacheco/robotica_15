@@ -13,8 +13,8 @@
 # Importamos la libreria de rospy
 import rospy
 
-# Importamos la libreria de pygame como interfaz de usuario.
-import pygame
+# Importamos el hilo para leer los comandos del teclado.
+from keyboard import Keyreader
 
 # Importamos los mensajes y servicios de PacMan
 from pacman.msg import actions
@@ -30,9 +30,9 @@ from pacman.srv import mapService
 def posCallback(data):
 	pass
 
-# Funcion que devuelve la tecla que esta siendo presionada. Sera
-# lanzada como un hilo.
-
+# Creamos el objeto del hilo para leer la tecla que esta siendo 
+# presionada.
+key = Keyreader()
 
 #----------------------------------------------------------------------
 #	VARIABLES / CONSTANTES
@@ -53,33 +53,19 @@ rospy.init_node('grupo15_punto1', anonymous=True)
 pub = rospy.Publisher('pacmanActions0', actions, queue_size=10)
 rospy.Subscriber('pacmanCoord0', pacmanPos, posCallback)
 
-# Inicializamos pygame y una ventana
-pygame.init()
-(width, height) = 	(300, 200)
-screen = pygame.display.set_mode((width, height))
-screen.fill((0, 0, 255))
-pygame.display.set_caption("Grupo 15: Punto 1")
-pygame.display.flip()
-
-# Loop infinito para mantener el nodo mientras sea necesario.
-while running:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			quit()
-
-
-
-
 # Enviamos la solicitud para iniciar el juego
 mapRequestClient = rospy.ServiceProxy('pacman_world', mapService)
 mapa = mapRequestClient(nombre)
 
 # Enviamos el comando para controlar a Pacman
-rate = rospy.Rate(10)
+rate = rospy.Rate(60)
 msg = actions()
-num = 0
+
+# Lanzamos el hilo que revisa que tecla esta siendo presionada.
+key.start()
+
+# Ciclo en el cual trabaja el nodo.
 while not rospy.is_shutdown():
-	msg.action = num
+	msg.action = key.getNumber()
 	pub.publish(msg.action)
 	rate.sleep()
