@@ -61,6 +61,8 @@ mapa = mapRequestClient(nombre)
 rate = rospy.Rate(60)
 msg = actions()
 
+print( 'Para terminar la ejecucion presione ESC y luego CTRL + C' )
+
 # Lanzamos el hilo que revisa que tecla esta siendo presionada.
 key.start()
 
@@ -69,3 +71,5 @@ while not rospy.is_shutdown():
 	msg.action = key.getNumber()
 	pub.publish(msg.action)
 	rate.sleep()
+
+
