@@ -14,7 +14,7 @@ Punto 2:
      $ rosrun pacman pacman_world --c "mapa"
      $ rosrun controller_15 punto2.py
        
-* Adicionalmente, también puede correrse en modo de juego --g o en conjunto con otros nodos. para ver la actualización y cambio de los elementos en la terminal. 
+Adicionalmente, también puede correrse en modo de juego --g o en conjunto con otros nodos. para ver la actualización y cambio de los elementos en la terminal. 
         
 Punto 3:
      $ rosrun pacman pacman_world --c "mapa"
